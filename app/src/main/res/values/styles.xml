@@ -1,0 +1,44 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+
+        
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:colorControlHighlight">@color/fillColor</item>
+
+        <item name="android:buttonStyle">@style/MyButton</item>
+        <item name="android:textViewStyle">@style/MyTextView</item>
+
+    </style>
+
+    <style name="MyButton" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:colorControlHighlight">@color/fillColor</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:textAllCaps">false</item>
+
+    </style>
+
+    <style name="LandscapeButton" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:colorControlHighlight">@color/fillColor</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textAllCaps">false</item>
+
+    </style>
+
+    <style name="MyTextView" parent="Widget.AppCompat.TextView.SpinnerItem">
+        <item name="android:textSize">60sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:editTextBackground">@color/colorPrimaryDark</item>
+        <item name="android:gravity">end|bottom</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
+        <item name="android:inputType">textNoSuggestions</item>
+    </style>
+
+</resources>
