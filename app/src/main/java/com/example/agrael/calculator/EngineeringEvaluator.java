@@ -21,20 +21,6 @@ public class EngineeringEvaluator implements Evaluator {
         operators = new ArrayList<>();
         functions = new ArrayList<>();
 
-        Operator factorialOperator = new Operator("!", 1, true, Operator.PRECEDENCE_POWER+1) {
-            @Override
-            public double apply(double... doubles) {
-                final int leftArg = (int) doubles[0];
-                if(leftArg < 0){
-                    throw new IllegalArgumentException("Argument must be non negative");
-                }
-                return factorial(leftArg+1);
-            }
-        };
-
-
-        operators.add(factorialOperator);
-
 
         Function sinr = new Function("sinr", 1) {
             @Override
@@ -78,12 +64,28 @@ public class EngineeringEvaluator implements Evaluator {
             }
         };
 
+        Function sqr = new Function("sqr", 1) {
+            @Override
+            public double apply(double... doubles) {
+                return Math.pow(doubles[0], 2);
+            }
+        };
+
+        Function factorial = new Function("fac", 1) {
+            @Override
+            public double apply(double... doubles) {
+                return factorial(doubles[0]+1);
+            }
+        };
+
         functions.add(sind);
         functions.add(sinr);
         functions.add(cosr);
         functions.add(cosd);
         functions.add(tanr);
         functions.add(tand);
+        functions.add(sqr);
+        functions.add(factorial);
     }
 
     @Override
@@ -96,6 +98,8 @@ public class EngineeringEvaluator implements Evaluator {
             String result = String.valueOf(exp.evaluate());
             res = new BigDecimal(result);
         } catch (Exception e) {
+            throw new EvaluationException();
+        }catch (StackOverflowError e){
             throw new EvaluationException();
         }
         return res.toPlainString();

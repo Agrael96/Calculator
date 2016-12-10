@@ -146,6 +146,7 @@ public class EngineeringCalcFragment extends Fragment implements View.OnClickLis
                 }
                 expression.clear();
                 value.setResult(true);
+                break;
             }
             case R.id.plusButton: {
                 addOperatorToExpression("+");
@@ -230,20 +231,7 @@ public class EngineeringCalcFragment extends Fragment implements View.OnClickLis
                 break;
             }
             case R.id.sqrButton: {
-                expressionText.setText(expression.addTokenToExpression("^2", value));
-                if(!expression.toString().isEmpty()){
-                    try {
-                        String result = evaluator.evaluate(expression.toString());
-                        value.setValue(result);
-                        resultText.setText(value.toString());
-                        value.setResult(true);
-                    }catch (Exception e){
-                        //resultText.setText(getString(R.string.invalidInput));
-                    }
-                }
-//                changeOrderOperator = true;
-//                isFloatDigit = false;
-                break;
+                addFunction("sqr");
             }
             case R.id.lnButton: {
                 addFunction("log");
@@ -258,24 +246,7 @@ public class EngineeringCalcFragment extends Fragment implements View.OnClickLis
                 break;
             }
             case R.id.factorialButton: {
-                if(!value.toString().isEmpty()) {
-                    if (!expression.toString().isEmpty() && expression.toString().endsWith(")")) {
-                        expressionText.setText(expression.addStringToExpression("!"));
-                    }
-                    else{
-                        expressionText.setText(expression.addTokenToExpression("!", value));
-                        if(!expression.toString().isEmpty()){
-                            try {
-                                String result = evaluator.evaluate(expression.toString());
-                                value.setValue(result);
-                                resultText.setText(value.toString());
-                                value.setResult(true);
-                            }catch (Exception e){
-                                //resultText.setText(getString(R.string.invalidInput));
-                            }
-                        }
-                    }
-                }
+                addFunction("fac");
                 break;
             }
             case R.id.xyButton: {
@@ -323,37 +294,6 @@ public class EngineeringCalcFragment extends Fragment implements View.OnClickLis
         return bundle;
     }
 
-    private String addFunctionToExpression(String func){
-        String result = resultText.getText().toString();
-        String exp = expressionText.getText().toString();
-        if(!result.isEmpty()){
-            if(!exp.isEmpty()){
-                if(exp.endsWith(")")){
-                    int count = 0;
-                    for(int i = exp.length()-1; i>=0; --i){
-                        if(exp.charAt(i) == ')'){
-                            count++;
-                        }
-                        if(exp.charAt(i) == '('){
-                            count--;
-                        }
-                        if(count == 0){
-                            exp = exp.substring(0, i) + func + exp.substring(i, exp.length());
-                            break;
-                        }
-                    }
-                }
-                else{
-                    exp+=func+"("+result+")";
-                }
-            }
-            else {
-                exp += func+"("+result+")";
-            }
-        }
-        return exp;
-    }
-
     private void addOperatorToExpression(String operator){
         expressionText.setText(expression.addTokenToExpression(operator, value));
         if(!expression.toString().isEmpty()){
@@ -362,21 +302,24 @@ public class EngineeringCalcFragment extends Fragment implements View.OnClickLis
     }
 
     private void addFunction(String func){
-        String resultString = resultText.getText().toString();
+        String resultString = value.toString();
         if(!resultString.isEmpty()) {
             if (func.equals("sin") || func.equals("cos") || func.equals("tan")){
                 if (angleType == AngleType.Radians) {
-                    expressionText.setText(addFunctionToExpression(func + "r"));
+                    expressionText.setText(expression.addFunctionToExpression(func + "r", value));
 
                 } else {
-                    expressionText.setText(addFunctionToExpression(func + "d"));
+                    expressionText.setText(expression.addFunctionToExpression(func + "d",value));
                 }
             }
             else{
-                expressionText.setText(addFunctionToExpression(func));
+                expressionText.setText(expression.addFunctionToExpression(func, value));
             }
             try {
-                resultText.setText(evaluator.evaluate(expressionText.getText().toString()));
+                String result = evaluator.evaluate(expression.toString());
+                value.setValue(result);
+                value.setResult(true);
+                resultText.setText(value.toString());
             }catch (EvaluationException e){
                 Utils.showToast(getContext(), getString(R.string.evaluationError));
             }

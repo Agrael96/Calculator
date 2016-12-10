@@ -52,7 +52,7 @@ public class Utils {
     }
 
     static final public boolean isOperator(char ch){
-        if(ch == '+' || ch == '-' || ch == '*' || ch == '/'  || ch == '(' || ch == '%' || ch == '!'){
+        if(ch == '+' || ch == '-' || ch == '*' || ch == '/'  || ch == '(' || ch == '%'){
             return true;
         }
         return false;

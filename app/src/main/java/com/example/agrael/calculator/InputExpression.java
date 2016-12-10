@@ -51,7 +51,7 @@ public class InputExpression {
         return expression;
     }
 
-    private boolean isLastCharacterOperator(String string){
+    public boolean isLastCharacterOperator(String string){
         return Utils.isOperator(string.charAt(string.length()-1));
     }
 
@@ -74,7 +74,7 @@ public class InputExpression {
 
     public String addTokenToExpression(String operator, InputValue value){
         if(!operator.equals(")")) {
-            if (value.isResult()) {
+            if (value.isResult() && isLastCharacterOperator(expression)) {
                 expression = replaceOperator(operator);
                 return expression;
             }
@@ -153,6 +153,52 @@ public class InputExpression {
         return newExpression;
     }
 
+    public String addFunctionToExpression(String func, InputValue value){
+        if(!value.toString().isEmpty()){
+            if(!expression.isEmpty()){
+                if(expression.endsWith(")")){
+                    if(value.isResult()) {
+                        int count = 0;
+                        for (int i = expression.length() - 1; i >= 0; --i) {
+                            if (expression.charAt(i) == ')') {
+                                count++;
+                            }
+                            if (expression.charAt(i) == '(') {
+                                count--;
+                            }
+                            if (count == 0) {
+                                String exp = expression.substring(0, i);
+                                if(endWithFunction(exp)) {
+                                    if(expression.endsWith("0")){
+                                        i -= 5;
+                                    }
+                                    else if (exp.endsWith("r") || exp.endsWith("d") || exp.endsWith("t")) {
+                                        i -= 4;
+                                    } else{
+                                        i -= 3;
+                                    }
+                                }
+                                expression = expression.substring(0, i) + func + "("
+                                        + expression.substring(i, expression.length())
+                                        + ")";
+                                isCloseBracketPresent = true;
+                                return expression;
+                            }
+                        }
+                    }
+                    else{
+                        expression+="*"+func+"("+value.toString()+")";
+                        isCloseBracketPresent = true;
+                        return expression;
+                    }
+                }
+            }
+            expression += func+"("+value.toString()+")";
+            isCloseBracketPresent = true;
+        }
+        return expression;
+    }
+
     public Bundle getData(){
         Bundle bundle = new Bundle();
         bundle.putString(EXPRESSION_KEY, expression);
@@ -169,6 +215,14 @@ public class InputExpression {
             openBracketCount = bundle.getInt(OPEN_BRACKET_COUNT_KEY, 0);
             expression = bundle.getString(EXPRESSION_KEY, "");
         }
+    }
+
+    public boolean endWithFunction(String str){
+        if(str.endsWith("log10") || str.endsWith("log") || str.endsWith("d") || str.endsWith("fac")
+                                 || str.endsWith("r") || str.endsWith("exp") || str.endsWith("sqrt")){
+            return true;
+        }
+        return false;
     }
 
     public void setExpression(String exp){
