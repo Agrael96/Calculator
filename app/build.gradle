@@ -32,4 +32,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
+    compile 'com.github.jfree:orson-charts:v1.6'
 }
