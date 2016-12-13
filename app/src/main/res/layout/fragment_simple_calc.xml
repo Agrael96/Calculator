@@ -13,6 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/expressionText"
+            style="@style/MyTextView"
             android:layout_weight="4"
             android:textSize="32sp" />
 
@@ -20,7 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="4"
-            android:id="@+id/resultText" />
+            android:id="@+id/resultText"
+            style="@style/MyTextView"/>
 
         <LinearLayout
             android:layout_width="match_parent"

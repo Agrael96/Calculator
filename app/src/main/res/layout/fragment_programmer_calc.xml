@@ -20,12 +20,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:id="@+id/expressionText"
+                style="@style/MyTextView"
                 android:textSize="15sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                style="@style/MyTextView"
                 android:id="@+id/resultText"/>
         </LinearLayout>
 

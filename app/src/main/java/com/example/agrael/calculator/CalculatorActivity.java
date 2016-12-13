@@ -53,6 +53,7 @@ public class CalculatorActivity extends AppCompatActivity {
 
                 ChartEditorFragment chartFragment = new ChartEditorFragment();
 
+
                 adapter.addPages(simpleCalcFragment);
                 adapter.addPages(chartFragment);
 

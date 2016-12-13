@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:id="@+id/menugroup1" >
+        <item
+            android:id="@+id/drawMenu"
+            android:title="Draw"
+            android:visible="true"/>
+        <item
+            android:id="@+id/helpMenu"
+            android:title="Help"/>
+    </group>
+</menu>

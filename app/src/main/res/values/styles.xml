@@ -5,12 +5,14 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
 
-        
+        <item name="android:popupMenuStyle">@style/myPopUp</item>
+        <item name="android:textAppearanceLargePopupMenu">@style/myPopUpLarge</item>
+        <item name="android:textAppearanceSmallPopupMenu">@style/myPopUpSmall</item>
+
         <item name="android:textColor">@color/textColorPrimary</item>
         <item name="android:colorControlHighlight">@color/fillColor</item>
 
         <item name="android:buttonStyle">@style/MyButton</item>
-        <item name="android:textViewStyle">@style/MyTextView</item>
 
     </style>
 
@@ -30,15 +32,27 @@
 
     </style>
 
-    <style name="MyTextView" parent="Widget.AppCompat.TextView.SpinnerItem">
+    <style name="MyTextView" parent="@android:style/Widget.TextView">
         <item name="android:textSize">60sp</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:editTextBackground">@color/colorPrimaryDark</item>
         <item name="android:gravity">end|bottom</item>
         <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">marquee</item>
+        <item name="android:ellipsize">marquee</item>T
         <item name="android:marqueeRepeatLimit">marquee_forever</item>
         <item name="android:inputType">textNoSuggestions</item>
+    </style>
+
+    <style name="myPopUpLarge" parent="@android:style/TextAppearance.Widget.PopupMenu.Large">
+        <item name="android:textSize">25sp</item>
+    </style>
+
+    <style name="myPopUpSmall" parent="@android:style/TextAppearance.Widget.PopupMenu.Small">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="myPopUp" parent="@android:style/Widget.PopupMenu">
+        <item name="android:textSize">30sp</item>
     </style>
 
 </resources>

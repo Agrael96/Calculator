@@ -70,6 +70,9 @@ public class ChartEditorFragment extends Fragment implements View.OnClickListene
         drawButton = (ImageButton) v.findViewById(R.id.drawButton);
         helpButton = (ImageButton) v.findViewById(R.id.helpButton);
 
+        Button btn = (Button) v.findViewById(R.id.menuButton);
+        btn.setOnClickListener(this);
+
         evaluator = new FunctionEvaluator();
 
         drawButton.setOnClickListener(this);
@@ -198,6 +201,33 @@ public class ChartEditorFragment extends Fragment implements View.OnClickListene
                 });
                 AlertDialog alertDialog = dialog.create();
                 alertDialog.show();
+                break;
+            }
+            case R.id.menuButton: {
+                PopupMenu popupMenu = new PopupMenu(getContext(), v);
+                popupMenu.inflate(R.menu.popupmenu);
+                popupMenu
+                        .setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                // Toast.makeText(PopupMenuDemoActivity.this,
+                                // item.toString(), Toast.LENGTH_LONG).show();
+                                // return true;
+                                switch (item.getItemId()) {
+
+                                    case R.id.drawMenu:
+                                        Utils.showToast(getContext(), "1");
+                                        return true;
+                                    case R.id.helpMenu:
+                                        Utils.showToast(getContext(), "2");
+                                        return true;
+                                    default:
+                                        return false;
+                                }
+                            }
+                        });
+                popupMenu.show();
                 break;
             }
         }
