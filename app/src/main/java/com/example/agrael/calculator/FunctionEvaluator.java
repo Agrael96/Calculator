@@ -37,4 +37,18 @@ public class FunctionEvaluator extends EngineeringEvaluator {
         return Double.NaN;
     }
 
+    public boolean validate(String function){
+        Expression exp;
+        if(!function.isEmpty()) {
+            try {
+                exp = new ExpressionBuilder(function).functions(functions)
+                        .operator(operators)
+                        .variable("x").build();
+            } catch (Exception e) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

@@ -97,7 +97,7 @@ public class InputExpression {
             }
         }
         else{
-            if(openBracketCount != 0) {
+            if(openBracketCount > 0) {
                 if (!value.toString().isEmpty()) {
                     addValueToExpression(value);
                 }
@@ -106,10 +106,10 @@ public class InputExpression {
                 } else {
                     addStringToExpression(")");
                 }
+                isCloseBracketPresent = true;
+                openBracketCount--;
+                isLastOperator = false;
             }
-            isCloseBracketPresent = true;
-            openBracketCount--;
-            isLastOperator = false;
         }
         return expression;
     }

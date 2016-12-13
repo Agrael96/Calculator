@@ -2,6 +2,9 @@
     <string name="app_name">Calculator</string>
     <string name="sqr">x<sup><small>2</small></sup></string>
     <string name="sqry">x<sup><small>y</small></sup></string>
+    <string name="f1">f<sub><small>1</small></sub></string>
+    <string name="f2">f<sub><small>2</small></sub></string>
+    <string name="f3">f<sub><small>3</small></sub></string>
     <string name="exp">e<sup><small>x</small></sup></string>
     <string name="evaluationError">Evaluation error</string>
     <string name="help">
@@ -13,7 +16,7 @@
         "  Exponentation:    2 ^ 2\n"
         "  Unary Minus:      -2\n"
         "  Modulo:             2 % 2\n"
-        "  Factorial:           2!\n"
+        "  Factorial:           fac(2)\n"
         "  acos:            arc cosine\n"
         "  asin:             arc sine\n"
         "  atan:            arc tangent\n"

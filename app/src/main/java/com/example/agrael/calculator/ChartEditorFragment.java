@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -39,18 +40,16 @@ import java.util.ArrayList;
  */
 public class ChartEditorFragment extends Fragment implements View.OnClickListener{
 
-    double leftEnd;
-    double rightEnd;
+    private EditText function;
+    private ImageButton menuButton;
+    private RadioButton firstFunc;
+    private RadioButton secondFunc;
+    private RadioButton thirdFunc;
 
-
-
-    LineChart chart;
-    EditText function;
-    ImageButton drawButton;
-    ImageButton helpButton;
-    float divider;
-    FunctionEvaluator evaluator;
-    String functionString;
+    private FunctionEvaluator evaluator;
+    private LineChartPlotter plotter;
+    private ArrayList<String> functions;
+    private int currentFunc;
 
     public ChartEditorFragment() {}
 
@@ -61,173 +60,94 @@ public class ChartEditorFragment extends Fragment implements View.OnClickListene
 
         View v = inflater.inflate(R.layout.fragment_chart, container, false);
 
-        leftEnd = -2;
-        rightEnd = 10;
-
-        chart = (LineChart) v.findViewById(R.id.chartContainer);
-        chart.setNoDataText("");
         function = (EditText) v.findViewById(R.id.function);
-        drawButton = (ImageButton) v.findViewById(R.id.drawButton);
-        helpButton = (ImageButton) v.findViewById(R.id.helpButton);
+        menuButton = (ImageButton) v.findViewById(R.id.menuButton);
 
-        Button btn = (Button) v.findViewById(R.id.menuButton);
-        btn.setOnClickListener(this);
+        firstFunc  = (RadioButton) v.findViewById(R.id.firstFunc);
+        secondFunc = (RadioButton) v.findViewById(R.id.secondFunc);
+        thirdFunc  = (RadioButton) v.findViewById(R.id.thirdFunc);
 
+        firstFunc.setOnClickListener(this);
+        secondFunc.setOnClickListener(this);
+        thirdFunc.setOnClickListener(this);
+        menuButton.setOnClickListener(this);
+
+        currentFunc = 0;
         evaluator = new FunctionEvaluator();
+        plotter = new LineChartPlotter((LineChart) v.findViewById(R.id.chartContainer));
 
-        drawButton.setOnClickListener(this);
-        helpButton.setOnClickListener(this);
-
-        functionString = "";
-
-        chart.setOnChartGestureListener(new OnChartGestureListener() {
-            @Override
-            public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-
-            }
-
-            @Override
-            public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-
-            }
-
-            @Override
-            public void onChartLongPressed(MotionEvent me) {
-
-            }
-
-            @Override
-            public void onChartDoubleTapped(MotionEvent me) {
-
-            }
-
-            @Override
-            public void onChartSingleTapped(MotionEvent me) {
-
-            }
-
-            @Override
-            public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
-
-            }
-
-            @Override
-            public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-
-            }
-
-            @Override
-            public void onChartTranslate(MotionEvent me, float dX, float dY) {
-                if(dX != 0){
-                    divider = (-1)*getView().getWidth()/(float)1.1;
-                    dX/=divider;
-                    rightEnd+=dX;
-                    leftEnd+=dX;
-                    drawChart(functionString);
-                }
-            }
-        });
-
+        functions = new ArrayList<>();
+        functions.add("");
+        functions.add("");
+        functions.add("");
 
         return v;
     }
 
 
-    private void drawChart(String function){
-        if(!function.isEmpty()) {
-            ArrayList<Entry> entries = new ArrayList<>();
-            for (double x = leftEnd; x < rightEnd; x += 0.05) {
-                Double result = Double.NaN;
-                try{
-                    result = evaluator.evaluate(function, (float) x);
-                }catch (ValidationException e) {
-                    Utils.showToast(getContext(), e.what());
-                    return;
-                }catch (EvaluationException e){}
-                if(!result.isNaN()) {
-                    entries.add(new Entry((float) x, result.floatValue()));
-                }
-            }
-            if (!entries.isEmpty()) {
-                LineDataSet set = new LineDataSet(entries, function);
-                set.setDrawCircles(false);
-                set.setDrawValues(false);
-                set.setLineWidth(2);
-                LineData data = new LineData(set);
-                if (chart != null) {
-                    chart.setScaleEnabled(true);
-                    chart.getAxisLeft().setTextColor(Color.WHITE);
-                    chart.getAxisRight().setTextColor(Color.WHITE);
-                    chart.getXAxis().setTextColor(Color.WHITE);
-                    chart.getLegend().setTextColor(Color.WHITE);
-                    chart.getLegend().setTextSize(20);
-                    Description description = new Description();
-                    description.setText("");
-                    chart.setDescription(description);
-                    chart.setDoubleTapToZoomEnabled(true);
-                    chart.setPinchZoom(true);
-                    chart.setData(data);
-                    chart.invalidate();
-
-                    functionString = function;
-                }
-            }
-            else{
-                Utils.showToast(getContext(), getString(R.string.evaluationError));
-            }
-        }
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.drawButton: {
-                String expression = function.getText().toString();
-                leftEnd = -2;
-                rightEnd = 10;
-                drawChart(expression);
-                break;
-            }
-            case R.id.helpButton: {
-                LayoutInflater inflater = LayoutInflater.from(getContext());
-                View view = inflater.inflate(R.layout.fragment_help_dialog, null);
-                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
-                dialog.setTitle("Help");
-                dialog.setView(view);
-                dialog.setCancelable(false);
-                dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {}
-                });
-                AlertDialog alertDialog = dialog.create();
-                alertDialog.show();
-                break;
-            }
             case R.id.menuButton: {
                 PopupMenu popupMenu = new PopupMenu(getContext(), v);
                 popupMenu.inflate(R.menu.popupmenu);
-                popupMenu
-                        .setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-
-                            @Override
-                            public boolean onMenuItemClick(MenuItem item) {
-                                // Toast.makeText(PopupMenuDemoActivity.this,
-                                // item.toString(), Toast.LENGTH_LONG).show();
-                                // return true;
-                                switch (item.getItemId()) {
-
-                                    case R.id.drawMenu:
-                                        Utils.showToast(getContext(), "1");
-                                        return true;
-                                    case R.id.helpMenu:
-                                        Utils.showToast(getContext(), "2");
-                                        return true;
-                                    default:
-                                        return false;
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.drawMenu:
+                                plotter.setMotionDivider((-1)*getView().getWidth()/1.1);
+                                plotter.clearLimits();
+                                functions.set(currentFunc, function.getText().toString());
+                                for(int i = 0; i< functions.size(); ++i){
+                                    plotter.addFunction(functions.get(i), i);
                                 }
-                            }
-                        });
+                                try {
+                                    plotter.draw();
+                                } catch (ValidationException e) {
+                                    Utils.showToast(getContext(), e.what());
+                                } catch (EvaluationException e) {
+                                    Utils.showToast(getContext(), e.what());
+                                }
+                                return true;
+                            case R.id.helpMenu:
+                                LayoutInflater inflater = LayoutInflater.from(getContext());
+                                View view = inflater.inflate(R.layout.fragment_help_dialog, null);
+                                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+                                dialog.setTitle("Help");
+                                dialog.setView(view);
+                                dialog.setCancelable(false);
+                                dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {}
+                                });
+                                AlertDialog alertDialog = dialog.create();
+                                alertDialog.show();
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                });
                 popupMenu.show();
+                break;
+            }
+            case R.id.firstFunc: {
+                functions.set(currentFunc, function.getText().toString());
+                currentFunc = 0;
+                function.setText(functions.get(currentFunc));
+                break;
+            }
+            case R.id.secondFunc: {
+                functions.set(currentFunc, function.getText().toString());
+                currentFunc = 1;
+                function.setText(functions.get(currentFunc));
+                break;
+            }
+            case R.id.thirdFunc: {
+                functions.set(currentFunc, function.getText().toString());
+                currentFunc = 2;
+                function.setText(functions.get(currentFunc));
                 break;
             }
         }
